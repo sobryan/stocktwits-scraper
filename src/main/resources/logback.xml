@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="ROLLING"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/stocktwits.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>stocktwits-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<!-- each file should be at most 100MB, keep 10 days worth of history, 
+				but at most 1GB -->
+			<maxFileSize>100MB</maxFileSize>
+			<maxHistory>10</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %-5level [%thread] %logger{0}: %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>logs/stocktwits.log.json</file>
+		<append>true</append>
+		<encoder class="co.elastic.logging.logback.EcsEncoder">
+			<serviceName>stocktwits</serviceName>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder 
+			by default -->
+		<encoder>
+			<pattern>%d %-5level [%thread] %logger{0}: %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="ROLLING" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+
+</configuration>
